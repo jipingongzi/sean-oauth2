@@ -6,8 +6,12 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
@@ -130,8 +134,12 @@ public class SecurityConfig {
                 context.getClaims().claim("Test", "Test Access Token");
                 Set<String> authorities = principal.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+                LocalDateTime futureDateTime = LocalDateTime.now().plusHours(24);  // 获取当前时间并增加 24 小时
+                long exp = futureDateTime.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();  // 转换为时间戳
+
                 context.getClaims().claim("authorities", authorities)
-                        .claim("user", principal.getName());
+                        .claim("user", principal.getName())
+                        .claim("exp", exp);
             }
 
         };

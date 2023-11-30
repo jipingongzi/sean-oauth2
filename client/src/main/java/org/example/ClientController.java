@@ -1,5 +1,6 @@
 package org.example;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -22,7 +23,7 @@ public class ClientController {
     private OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
     @GetMapping("/client")
-    public String welcome(Authentication authentication) {
+    public String welcome(HttpServletRequest request, Authentication authentication) {
         String authorities = authentication.getName() + " - " + authentication.getAuthorities().toString();
         String welcome = welcomeClient.getWelcome();
         return "<h1>" +  welcome + "</h1><h2>" + authorities + "</h2>";
