@@ -1,6 +1,7 @@
 package org.example;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -9,10 +10,9 @@ import java.time.LocalDateTime;
 public class ResourceController {
 
     @GetMapping("/resource")
-    public String home(HttpServletRequest request) {
-        System.out.println(request.getHeaderNames());
+    public String home(HttpServletRequest request, Authentication authentication) {
         LocalDateTime time = LocalDateTime.now();
-        return "Welcome Resource Server! - " + time;
+        return "Welcome ResourceServer! - " + time + "<br>" + authentication.getName() + " - " + authentication.getAuthorities();
     }
 
 }
