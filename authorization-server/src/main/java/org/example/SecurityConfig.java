@@ -77,8 +77,8 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        var user1 = User.withUsername("user")
-                .password("password")
+        var user1 = User.withUsername("sean")
+                .password("111111")
                 .authorities("read")
                 .build();
         return new InMemoryUserDetailsManager(user1);
@@ -98,6 +98,7 @@ public class SecurityConfig {
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .redirectUri("http://127.0.0.1:8080/login/oauth2/code/myoauth2")
+//                .redirectUri("https://oauthdebugger.com/")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
@@ -134,14 +135,14 @@ public class SecurityConfig {
                 context.getClaims().claim("Test", "Test Access Token");
                 Set<String> authorities = principal.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
-                LocalDateTime futureDateTime = LocalDateTime.now().plusHours(24);  // 获取当前时间并增加 24 小时
-                long exp = futureDateTime.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();  // 转换为时间戳
+                // 获取当前时间并增加 24 小时
+                LocalDateTime futureDateTime = LocalDateTime.now().plusHours(24);
+                long exp = futureDateTime.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
 
                 context.getClaims().claim("authorities", authorities)
                         .claim("user", principal.getName())
                         .claim("exp", exp);
             }
-
         };
     }
 
