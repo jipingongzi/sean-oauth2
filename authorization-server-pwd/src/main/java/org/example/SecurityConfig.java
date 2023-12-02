@@ -100,7 +100,7 @@ public class SecurityConfig {
 //                .redirectUri("http://127.0.0.1:8080/login/oauth2/code/myoauth2")
 //                .redirectUri("https://oauthdebugger.com/")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.PASSWORD)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
 //                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .build();
 
