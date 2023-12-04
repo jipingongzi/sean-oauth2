@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>authorization-server</module>
-        <module>authorization-server-pwd</module>
+        <module>authorization-server-client_credentials</module>
         <module>resource-server</module>
         <module>client</module>
     </modules>
