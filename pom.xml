@@ -13,6 +13,7 @@
         <module>authorization-server-client_credentials</module>
         <module>resource-server</module>
         <module>client</module>
+        <module>authorization-custom</module>
     </modules>
     <dependencies>
         <dependency>
