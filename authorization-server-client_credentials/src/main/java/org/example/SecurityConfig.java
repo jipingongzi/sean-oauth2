@@ -49,9 +49,7 @@ public class SecurityConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain asSecurityFilterChain(HttpSecurity http) throws Exception {
-
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-
         return http
                 .getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(withDefaults())
                 .and()
@@ -59,9 +57,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .build();
-
     }
-
     @Bean
     @Order(2)
     public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -69,7 +65,6 @@ public class SecurityConfig {
                 .formLogin(withDefaults())
                 .authorizeHttpRequests(authorize ->authorize.anyRequest().authenticated())
                 .build();
-
     }
 
     @Bean

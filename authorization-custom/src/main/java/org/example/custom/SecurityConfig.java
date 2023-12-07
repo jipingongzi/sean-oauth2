@@ -1,15 +1,16 @@
-package org.example;
+package org.example.custom;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import org.springframework.context.ApplicationContext;
+import org.example.custom.CustomAuthenticationProvider;
+import org.example.custom.CustomGrantTypeFilter;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.core.Authentication;
@@ -30,10 +31,10 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
-import org.springframework.security.oauth2.server.authorization.web.OAuth2TokenEndpointFilter;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -41,6 +42,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -53,18 +55,17 @@ public class SecurityConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain asSecurityFilterChain(HttpSecurity http) throws Exception {
-
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-
         return http
                 .getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(withDefaults())
                 .and()
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .addFilterBefore(customGrantTypeFilter(), BasicAuthenticationFilter.class)
+                .authenticationProvider(new CustomAuthenticationProvider())
                 .build();
     }
-
     @Bean
     @Order(2)
     public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -72,6 +73,17 @@ public class SecurityConfig {
                 .formLogin(withDefaults())
                 .authorizeHttpRequests(authorize ->authorize.anyRequest().authenticated())
                 .build();
+    }
+
+
+    @Bean
+    public CustomGrantTypeFilter customGrantTypeFilter(){
+        return new CustomGrantTypeFilter(authenticationManager(), userDetailsService());
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        return new ProviderManager(Arrays.asList(new CustomAuthenticationProvider()));
     }
 
     @Bean
@@ -96,9 +108,8 @@ public class SecurityConfig {
                 .scope("read")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
-                .redirectUri("http://127.0.0.1:8080/login/oauth2/code/myoauth2")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(new AuthorizationGrantType("sean-password"))
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .build();
 
         return new InMemoryRegisteredClientRepository(registeredClient);
@@ -142,6 +153,7 @@ public class SecurityConfig {
             }
         };
     }
+
 
     public static RSAKey generateRsa() {
         KeyPair keyPair = generateRsaKey();
