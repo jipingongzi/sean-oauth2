@@ -10,8 +10,8 @@ spring:
             client-id: client
             client-secret: secret
             scope:
-              - openid
               - read
+              - openid
               - profile
             authorization-grant-type: authorization_code
             redirect-uri: http://127.0.0.1:8080/login/oauth2/code/myoauth2
