@@ -66,15 +66,6 @@ public class SecurityConfig {
                 .authenticationProvider(new CustomAuthenticationProvider())
                 .build();
     }
-    @Bean
-    @Order(2)
-    public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .formLogin(withDefaults())
-                .authorizeHttpRequests(authorize ->authorize.anyRequest().authenticated())
-                .build();
-    }
-
 
     @Bean
     public CustomGrantTypeFilter customGrantTypeFilter(){
