@@ -34,7 +34,7 @@ public class CustomGrantTypeFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String grantType = request.getParameter("grant_type");
-        if (!"sean-password".equals(grantType)) {
+        if (!"password".equals(grantType)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -52,7 +52,7 @@ public class CustomGrantTypeFilter extends OncePerRequestFilter {
 
             Map<String, String> responseBody = new HashMap<>();
             responseBody.put("access_token", accessToken);
-            responseBody.put("refresh_token", "");
+            responseBody.put("refresh_token", "test refresh token");
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
