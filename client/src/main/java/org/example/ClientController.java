@@ -26,8 +26,9 @@ public class ClientController {
     public String welcome(HttpServletRequest request, Authentication authentication) {
         String authorities = authentication.getName() + " - " + authentication.getAuthorities().toString();
         String welcome = welcomeClient.getWelcome();
-        return "<h1>" +  welcome + "</h1><h2>" + authorities + "</h2>";
+        return "<h1>" + welcome + "</h1><h2>" + authorities + "</h2>";
     }
+
     @GetMapping("/token")
     public String token(Authentication authentication) {
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;

@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationContext;
 public class AuthorizationServer {
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(AuthorizationServer.class, args);
-        String[] names =  context.getBeanDefinitionNames();
+        String[] names = context.getBeanDefinitionNames();
         for (int i = 0; i < names.length; i++) {
             System.out.println(names[i]);
         }

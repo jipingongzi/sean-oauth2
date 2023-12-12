@@ -25,7 +25,7 @@ public class CustomGrantTypeFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
     public CustomGrantTypeFilter(AuthenticationManager authenticationManager,
-                                  UserDetailsService userDetailsService) {
+                                 UserDetailsService userDetailsService) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
     }
