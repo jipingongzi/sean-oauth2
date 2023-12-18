@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtils {
-    private String jwtSigningKey = "secret";
+    private final String jwtSigningKey = "secret";
 
     /**
      * 从JWT中提取用户名
@@ -65,7 +65,8 @@ public class JwtUtils {
     public Boolean isTokenExpired(String token) {
         Date expirationDate = extractExpiration(token);
         if (expirationDate == null) {
-            return true; // or false based on your requirements
+            // or false based on your requirements
+            return true;
         }
         return expirationDate.before(new Date());
     }
